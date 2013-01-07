@@ -273,7 +273,7 @@ sub get_row {
     
 }
 
-sub get_column { 
+sub get_col { 
     my $self= shift;
     my $col_name = shift;
     

@@ -41,21 +41,33 @@ sub index : Path('/hdf5/index') Args(1) {
 }
 
 
-sub get_row : Path('/hdf5/get') Args(2) { 
+sub get : Path('/hdf5/get') Args(3) { 
     my $self = shift;
     my $c = shift;
+    my $dimension = shift;
+    my $name   = shift;
     my $group = shift;
-    my $row   = shift;
     
-    print STDERR "HDF5_FILE: ".$c->config->{hdf5_file}." GROUP: $group. ROW: $row\n";
+    print STDERR "HDF5_FILE: ".$c->config->{hdf5_file}." GROUP: $group. MAME: $name.\n";
 
     my $hs = Hdf5::Simple->new( { hdf5_file=>$c->config->{hdf5_file}, group=>$group, });
     
-    my $hashref = $hs->get_row($row);
+    my $hashref;
+    if ($dimension eq "row") { 
+	$hashref = $hs->get_row($name);
+    }
+    elsif ($dimension eq "col") { 
+	$hashref = $hs->get_col($name);
+    }
+    else { 
+	die "Invalid dimension $dimension. Should either be 'row' or 'col'.\n";
+    }
 
-    $c->stash->{rest} = [ "data" => "blabla", $hashref ];
+    $c->stash->{rest} = { query=>$name, response=>$hashref } ;
     
 }
+
+
 
 
 1;

@@ -35,19 +35,29 @@ sub index :Path :Args(0) {
 
 This server supports two types of queries: 
 <dl>
-<dt>/hdf5/get/row/DATASET/ROWNAME</dt>
+<dt><pre>/hdf5/get/row/DATASET/ROWNAME</pre></dt>
 <dd>get the entire row named ROWNAME from dataset DATASET</dd>
 <br />
-<dt>/hdf5/get/col/DATASET/COLNAME</dt>
+<dt><pre>/hdf5/get/col/DATASET/COLNAME</pre></dt>
 <dd>get the entire column named COLNAME from dataset DATASET</dd>
 <br />
 The data are returned in a JSON data structure of the following form:
-data = { 
+<pre>
+response = { 
   query: querydata,
-  response: responsedata
+  data: responsedata,
 };
-
-
+</pre>
+An 'error' key is present if an error occurs, with the value as the human readable error message.
+<br />
+<br />
+List available datasets: <pre>/hdf5/datasets</pre>
+JSON: <br />
+<pre>
+response = { 
+  datasets: datasetlist
+}
+</pre>
 BODY
 	
 }

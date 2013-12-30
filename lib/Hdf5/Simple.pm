@@ -299,8 +299,7 @@ sub get_row {
     my $hdf = $self->hdf5();
 
     if (!defined($self->row_name_index()->{$row_name})) { 
-	print STDERR "ROW NAME $row_name DOES NOT EXIST!\n";
-	return undef;
+	die "ROW NAME $row_name DOES NOT EXIST!\n";
     }
     
     my $g = $hdf->group($self->group);
@@ -344,7 +343,7 @@ sub get_col {
     my $col_name = shift;
     
     if (!defined($self->column_name_index()->{$col_name})) { 
-	return undef;
+	die "Column $col_name does not exist.";
     }
     
     my $g = $self->hdf5()->group($self->group);

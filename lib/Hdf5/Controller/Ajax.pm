@@ -75,16 +75,29 @@ sub get : Path('/hdf5/get') Args(3) {
     
     my $hashref;
     if ($dimension eq "row") { 
-	$hashref = $hs->get_row($name);
+	eval { 
+	    $hashref = $hs->get_row($name);
+	};
+	if ($@) { 
+	    $c->stash->{rest} = { error => "The row '$name' does not exist." };
+	    return;
+	}
     }
     elsif ($dimension eq "col") { 
-	$hashref = $hs->get_col($name);
+	eval { 
+	    $hashref = $hs->get_col($name);
+	};
+	if ($@) { 
+	    $c->stash->{rest} = { error => "The column '$name' does not exist." };
+	    return;
+	}
+
     }
     else { 
 	die "Invalid dimension $dimension. Should either be 'row' or 'col'.\n";
     }
 
-    $c->stash->{rest} = { query=>$name, response=>$hashref } ;
+    $c->stash->{rest} = { query=>$name, data=>$hashref } ;
     
 }
 
@@ -100,7 +113,7 @@ sub get : Path('/hdf5/get') Args(3) {
 
 =cut
 
-sub files : Path('/hdf5/files') Args(0) { 
+sub datasets : Path('/hdf5/datasets') Args(0) { 
     my $self = shift;
     my $c = shift;
     
@@ -110,7 +123,7 @@ sub files : Path('/hdf5/files') Args(0) {
 
     print STDERR "FILES : ".join (", ", @basenames);
 
-    $c->stash->{rest} = { files => \@basenames};
+    $c->stash->{rest} = { datasets => \@basenames};
 
 }
 

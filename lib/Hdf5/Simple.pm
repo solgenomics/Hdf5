@@ -368,5 +368,12 @@ sub get_col {
     return \%return_data;
 }
 
+sub groups { 
+    my $self = shift;
+    my @groups = $self->hdf5()->groups();
+
+    return @groups;
+}
+
 
 1;

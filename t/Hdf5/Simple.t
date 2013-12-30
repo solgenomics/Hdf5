@@ -40,7 +40,7 @@ foreach my $k (keys %$r) {
 }
 
 print "col 'B'\n";
-my $c = $h->get_column('B');
+my $c = $h->get_col('B');
 foreach my $k (keys %$c) { 
     print "$k, $c->{$k}\n";
 }

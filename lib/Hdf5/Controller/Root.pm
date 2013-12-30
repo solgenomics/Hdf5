@@ -30,7 +30,26 @@ sub index :Path :Args(0) {
     my ( $self, $c ) = @_;
 
     # Hello World
-    $c->response->body( $c->welcome_message );
+    $c->response->body(<<BODY);
+<h1>Mueller Lab HDF5 Server</h1>
+
+This server supports two types of queries: 
+<dl>
+<dt>/hdf5/get/row/DATASET/ROWNAME</dt>
+<dd>get the entire row named ROWNAME from dataset DATASET</dd>
+<br />
+<dt>/hdf5/get/col/DATASET/COLNAME</dt>
+<dd>get the entire column named COLNAME from dataset DATASET</dd>
+<br />
+The data are returned in a JSON data structure of the following form:
+data = { 
+  query: querydata,
+  response: responsedata
+};
+
+
+BODY
+	
 }
 
 =head2 default

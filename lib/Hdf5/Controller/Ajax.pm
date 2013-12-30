@@ -67,6 +67,17 @@ sub get : Path('/hdf5/get') Args(3) {
     
 }
 
+sub groups : Path('/hdf5/groups') Args(0) { 
+    my $self = shift;
+    my $c = shift;
+
+    my $hs = Hdf5::Simple->new( { hdf5_file=>$c->config->{hdf5_file} });
+    my @groups = $hs->groups();
+
+    
+
+    
+}    
 
 
 

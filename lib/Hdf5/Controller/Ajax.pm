@@ -13,6 +13,7 @@ __PACKAGE__->config(
 
 
 use File::Slurp;
+use File::Basename;
 use PDL::IO::HDF5;
 use Hdf5::Simple;
 
@@ -29,10 +30,12 @@ has chunked   => ( isa => 'bool',
 
     );
 
+# need to password protect this url:
+#
 sub index : Path('/hdf5/index') Args(1) {
-    my ($self, $c, $group) = @_;
+    my ($self, $c, $file) = @_;
     
-    my $hdf = Hdf5::Simple->new( { hdf5_file => $c->config->{hdf5_file}, group=>$group, });
+    my $hdf = Hdf5::Simple->new( { hdf5_file => $c->config->{hdf5_path}."/$file", });
     
     $hdf->index_hdf5($self->data_file());
     
@@ -40,17 +43,35 @@ sub index : Path('/hdf5/index') Args(1) {
     
 }
 
+=head2 get
+
+ Usage:        /hdf5/get/<row|col>/<file>/<name>
+ Desc:         
+ Ret:          json
+ Args:
+ Side Effects:
+ Example:
+
+=cut
 
 sub get : Path('/hdf5/get') Args(3) { 
     my $self = shift;
     my $c = shift;
     my $dimension = shift;
+    my $file = shift;
     my $name   = shift;
-    my $group = shift;
+#    my $group = shift;
     
-    print STDERR "HDF5_FILE: ".$c->config->{hdf5_file}." GROUP: $group. MAME: $name.\n";
+    
+    print STDERR "HDF5_FILE: ".$c->config->{hdf5_path}."/".$file." MAME: $name.\n";
 
-    my $hs = Hdf5::Simple->new( { hdf5_file=>$c->config->{hdf5_file}, group=>$group, });
+    my $path = $c->config->{hdf5_path}."/".$file;
+    if (!$self->check_file($path)) { 
+	$c->stash->{rest} = { error => "The dataset does not exist or is not of the right type." };
+	return;
+    }
+
+    my $hs = Hdf5::Simple->new( { hdf5_file=>$c->config->{hdf5_path}."/$file" });
     
     my $hashref;
     if ($dimension eq "row") { 
@@ -67,18 +88,51 @@ sub get : Path('/hdf5/get') Args(3) {
     
 }
 
-sub groups : Path('/hdf5/groups') Args(0) { 
+=head2 files
+
+ Usage:        /hdf5/files
+ Desc:         list all the available files. 
+               They must be in the hdf5_path dir.
+ Ret:          json with key=files, and a list of files.
+ Args:         none
+ Side Effects:
+ Example:
+
+=cut
+
+sub files : Path('/hdf5/files') Args(0) { 
     my $self = shift;
     my $c = shift;
+    
+    my @files = glob $c->config->{hdf5_path}."/*";
 
-    my $hs = Hdf5::Simple->new( { hdf5_file=>$c->config->{hdf5_file} });
-    my @groups = $hs->groups();
+    my @basenames = map { basename $_; } @files;
+
+    print STDERR "FILES : ".join (", ", @basenames);
+
+    $c->stash->{rest} = { files => \@basenames};
+
+}
+
+sub check_file { 
+    my $self = shift;
+    my $file = shift;
+
+    if ($file =~ m/\.\./) { return 0; }
+    
+    if ($file =~ m/\;/) { return 0; }
+    
+    my $type = `file $file`;
+
+    if ($type =~ m/Hierarchical Data Format \(version 5\)/) { 
+	
+	return 1;
+    }
+    
+    return 0;
 
     
-
     
-}    
-
-
+}
 
 1;

@@ -1,13 +1,13 @@
 Hdf5
 ====
 
-A REST-based SNP server with a Hdf5 backend
+A REST-based SNP server with an Hdf5 backend
 
-It implements a simple API based on the following URL structure:
+To retrieve individual SNP calls, it implements a simple API based on the following URL structure:
 
 /hdf5/get/&lt;row|col&gt;/&lt;dataset&gt;/&lt;name&gt;
 
-"dataset" denotes an HDF5 file, name is the column or row name. 
+"dataset" denotes an HDF5 file, name is the column or row name (marker name or accession id).
 
 Returns a JSON structure names and scores as keys and values, in the following data structure:
 

@@ -18,6 +18,9 @@ response = {
 
 An 'error' key is present if an error occurs, with the value as the human readable error message. 
 
+Example: http://hdf5.sgn.cornell.edu/hdf5/get/col/hdf5_test/MARKER_5607
+
+
 List available datasets:
 
 ```

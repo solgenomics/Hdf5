@@ -1,4 +1,4 @@
-Hdf5
+Hdf5 Server
 ====
 
 A REST-based SNP server with an Hdf5 backend

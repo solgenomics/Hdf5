@@ -5,7 +5,7 @@ A REST-based SNP server with an Hdf5 backend
 
 To retrieve individual SNP calls, it implements a simple API based on the following URL structure:
 ```
-/hdf5/get/&lt;row | col&gt;/&lt;dataset&gt;/&lt;name&gt;
+/hdf5/get/< row | col >/<dataset>/<name>
 ```
 "dataset" denotes an HDF5 file, name is the column or row name (marker name or accession id).
 

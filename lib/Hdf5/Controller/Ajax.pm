@@ -14,6 +14,7 @@ __PACKAGE__->config(
 
 use File::Slurp;
 use File::Basename;
+use File::LibMagic;
 use PDL::IO::HDF5;
 use Hdf5::Simple;
 
@@ -135,7 +136,7 @@ sub check_file {
     
     if ($file =~ m/\;/) { return 0; }
     
-    my $type = `file $file`;
+    my $type = File::LibMagic->new()->describe_filename($file);
 
     if ($type =~ m/Hierarchical Data Format \(version 5\)/) { 
 	

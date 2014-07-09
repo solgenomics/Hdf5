@@ -16,7 +16,8 @@ Hdf5::Simple - a simple HDF5 interface
 
 This object can index and query an HDF5 file with a special structure. The data is stored in a "SNPS" dataset (this should be changed to just 'data', actually), whereas a mapping of row headers to row IDs is stored in row_names, and columns in a column_names, dataset.
 
-The object can retrieve either entire rows or entire columns, based on the row and column names as indices.
+The object can retrieve either entire rows or entire columns, with the row and column names used as indices.
+
 
     
 =head1 AUTHOR
